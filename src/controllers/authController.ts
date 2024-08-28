@@ -67,5 +67,19 @@ export const login = async (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
 
     const token = jwt.sign({ id: user.id, username: user.email }, secret, { expiresIn: '6h' });
 
-    return h.response({ token }).code(200);
+    return h.response({ 'token':token }).code(200);
+}
+
+export const getUser = async(request: Hapi.Request, h: Hapi.ResponseToolkit) => {
+    const token = request.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return h.response({ error: 'Unauthorized' }).code(401).takeover();
+    }
+
+    try {
+        jwt.verify(token, secret);
+        return h.response({ 'token':token }).code(200);
+    } catch (err) {
+        return h.response({ error: 'Unauthorized' }).code(401).takeover();
+    }
 }

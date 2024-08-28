@@ -190,7 +190,8 @@ const fetchProduct = async (request, h) => {
                 message: 'Invalid page or limit parameters',
             }).code(400);
         }
-        const response = await fetch(`https://dummyjson.com/products?limit=${pageNumber}&skip=${offset}&select=title,sku,thumbnail,price,description,stock`);
+        console.log(pageNumber, pageSize);
+        const response = await fetch(`https://dummyjson.com/products?limit=${pageSize}&skip=${offset}&select=title,sku,thumbnail,price,description,stock`);
         const data = await response.json();
         if (!data || !data.products || data.products.length === 0) {
             return h.response({

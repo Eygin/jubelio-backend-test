@@ -16,6 +16,11 @@ const apiRoutes = [
     },
     {
         method: 'GET',
+        path: '/user',
+        handler: authController_1.getUser
+    },
+    {
+        method: 'GET',
         path: '/product',
         handler: productController_1.getListProduct,
         options: {

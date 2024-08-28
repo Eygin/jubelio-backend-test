@@ -6,7 +6,25 @@ import { logger } from './middlewares/logger';
 const init = async () => {
     const server = Hapi.server({
         port: 3000,
-        host: 'localhost'
+        host: 'localhost',
+        routes: {
+            cors: {
+                origin: ['*'],
+                headers: ['Accept', 'Authorization', 'Content-Type', 'If-None-Match'],
+                exposedHeaders: ['WWW-Authenticate', 'Server-Authorization'],
+                additionalHeaders: [
+                    'Access-Control-Allow-Origin',
+                    'Access-Control-Request-Method',
+                    'Allow-Origin',
+                    'Origin',
+                    'access-control-allow-origin',
+                    'access-control-request-method',
+                    'allow-origin',
+                    'origin',
+                ],
+                credentials: true,
+            }
+        }
     });
 
     await server.register(Jwt);

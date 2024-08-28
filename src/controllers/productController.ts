@@ -27,11 +27,13 @@ export const getListProduct = async (request: Hapi.Request, h: Hapi.ResponseTool
         const totalPages = Math.ceil(totalCount / pageSize);
 
         return {
-            page: pageNumber,
-            limit: pageSize,
-            totalPages,
-            totalCount,
-            product: productResult?.result
+            product: {
+                page: pageNumber,
+                limit: pageSize,
+                totalPages: totalPages,
+                totalCount: totalCount,
+                results: productResult?.result
+            }
         };
     } catch (error) {
         console.error('Error fetching products:', error);

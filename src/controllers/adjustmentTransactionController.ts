@@ -1,7 +1,51 @@
 import Hapi from '@hapi/hapi';
 import Joi from '@hapi/joi';
-import { create, deleteById, detail, update } from '../models/AdjustmentTransactionModels';
+import { create, deleteById, detail, update, getList } from '../models/AdjustmentTransactionModels';
 import { checkSKU, updateStock } from '../models/ProductModels';
+
+export const listTransaction = async (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
+    const { page = 1, limit = 10 } = request.query as any;
+    const pageNumber = parseInt(page, 10);
+    const pageSize = parseInt(limit, 10);
+
+    if (isNaN(pageNumber) || isNaN(pageSize) || pageNumber < 1 || pageSize < 1) {
+        return h.response({
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'Invalid page or limit parameters',
+        }).code(400);
+    }
+
+    try {
+        const payload = {
+            'page': pageNumber,
+            'limit': pageSize
+        }
+        
+        const transactionResult = await getList(payload)
+        const totalCount = transactionResult.countResult.rows[0]?.count || 0;
+        const totalPages = Math.ceil(totalCount / pageSize);
+
+        return {
+            product: {
+                page: pageNumber,
+                limit: pageSize,
+                totalPages: totalPages,
+                totalCount: totalCount,
+                results: transactionResult?.result
+            }
+        };
+    } catch (err) {
+        const error = err as Error;
+        console.error('Error:', error);
+
+        return h.response({
+            statusCode: 500,
+            error: 'Internal Server Error',
+            message: error.message,
+        }).code(500);   
+    }   
+}
 
 export const createTransaction = async (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
     try {

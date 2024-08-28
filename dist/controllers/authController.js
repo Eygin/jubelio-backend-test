@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.register = void 0;
+exports.getUser = exports.login = exports.register = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const joi_1 = __importDefault(require("@hapi/joi"));
 const UsersModels_1 = require("../models/UsersModels");
@@ -57,6 +57,20 @@ const login = async (request, h) => {
         return h.response({ error: 'Invalid credentials' }).code(401);
     }
     const token = jsonwebtoken_1.default.sign({ id: user.id, username: user.email }, secret, { expiresIn: '6h' });
-    return h.response({ token }).code(200);
+    return h.response({ 'token': token }).code(200);
 };
 exports.login = login;
+const getUser = async (request, h) => {
+    const token = request.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return h.response({ error: 'Unauthorized' }).code(401).takeover();
+    }
+    try {
+        jsonwebtoken_1.default.verify(token, secret);
+        return h.response({ 'token': token }).code(200);
+    }
+    catch (err) {
+        return h.response({ error: 'Unauthorized' }).code(401).takeover();
+    }
+};
+exports.getUser = getUser;

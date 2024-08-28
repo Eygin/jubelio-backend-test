@@ -10,7 +10,15 @@ const logger_1 = require("./middlewares/logger");
 const init = async () => {
     const server = hapi_1.default.server({
         port: 3000,
-        host: 'localhost'
+        host: 'localhost',
+        routes: {
+            cors: {
+                origin: ['*'],
+                headers: ['Accept', 'Authorization', 'Content-Type', 'If-None-Match'],
+                exposedHeaders: ['WWW-Authenticate', 'Server-Authorization'],
+                credentials: true,
+            }
+        }
     });
     await server.register(jwt_1.default);
     server.auth.strategy('jwt', 'jwt', {
@@ -25,6 +33,9 @@ const init = async () => {
             timeSkewSec: 15
         },
         validate: async (artifacts) => {
+            if (!artifacts.decoded || !artifacts.decoded.payload) {
+                return { isValid: false, credentials: null };
+            }
             return {
                 isValid: true,
                 credentials: { user: artifacts.decoded.payload }

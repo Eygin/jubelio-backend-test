@@ -16,7 +16,7 @@ export const getList = async (params: object) =>
     try {
         const {page, limit} = params as any;
         const offset = (page - 1) * limit;
-        const result = (await client.query('SELECT title, sku, image, price FROM products LIMIT $1 OFFSET $2', [limit, offset])).rows;
+        const result = (await client.query('SELECT title, sku, image, price, stock, id, description FROM products ORDER BY id DESC LIMIT $1 OFFSET $2', [limit, offset])).rows;
         const countResult = await client.query('SELECT COUNT(id) AS count FROM products');
 
         return {result, countResult}

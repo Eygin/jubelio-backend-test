@@ -1,7 +1,7 @@
 import Hapi from '@hapi/hapi';
-import { register, login } from '../controllers/authController';
+import { register, login, getUser } from '../controllers/authController';
 import { getListProduct, createProduct, getDetailProduct, updateProduct, deleteProduct, fetchProduct } from '../controllers/productController';
-import { createTransaction, deleteTransaction, detailTransaction, updateTransaction } from '../controllers/adjustmentTransactionController';
+import { createTransaction, deleteTransaction, detailTransaction, listTransaction, updateTransaction } from '../controllers/adjustmentTransactionController';
 
 const apiRoutes: Hapi.ServerRoute[] = [
     {
@@ -13,6 +13,14 @@ const apiRoutes: Hapi.ServerRoute[] = [
         method: 'POST',
         path: '/login',
         handler: login,
+    },
+    {
+        method: 'GET',
+        path: '/user',
+        handler: getUser,
+        options: {
+            auth: 'jwt'
+        }
     },
     {
         method: 'GET',
@@ -93,6 +101,14 @@ const apiRoutes: Hapi.ServerRoute[] = [
             auth: 'jwt'
         },
         handler: deleteTransaction
+    },
+    {
+        method: 'GET',
+        path: '/transaction-adjustment',
+        options: {
+            auth: 'jwt'
+        },
+        handler: listTransaction
     }
 ];
 
