@@ -23,6 +23,10 @@ const init = async () => {
             timeSkewSec: 15
         },
         validate: async (artifacts) => {
+            if (!artifacts.decoded || !artifacts.decoded.payload) {
+                return { isValid: false, credentials: null };
+            }
+        
             return {
                 isValid: true,
                 credentials: { user: artifacts.decoded.payload }
