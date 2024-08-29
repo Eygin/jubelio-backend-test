@@ -1,6 +1,6 @@
 import Hapi from '@hapi/hapi';
 import { register, login, getUser } from '../controllers/authController';
-import { getListProduct, createProduct, getDetailProduct, updateProduct, deleteProduct, fetchProduct } from '../controllers/productController';
+import { getListProduct, createProduct, getDetailProduct, updateProduct, deleteProduct, fetchProduct, getListSKU } from '../controllers/productController';
 import { createTransaction, deleteTransaction, detailTransaction, listTransaction, updateTransaction } from '../controllers/adjustmentTransactionController';
 
 const apiRoutes: Hapi.ServerRoute[] = [
@@ -26,6 +26,14 @@ const apiRoutes: Hapi.ServerRoute[] = [
         method: 'GET',
         path: '/product',
         handler: getListProduct,
+        options: {
+            auth: 'jwt'
+        }
+    },
+    {
+        method: 'GET',
+        path: '/sku-list',
+        handler: getListSKU,
         options: {
             auth: 'jwt'
         }

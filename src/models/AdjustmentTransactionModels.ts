@@ -13,7 +13,7 @@ export const getList = async (params: object) =>
     try {
         const {page, limit} = params as any;
         const offset = (page - 1) * limit;
-        const result = (await client.query('SELECT adjustment_transactions.id, adjustment_transactions.product_id, products.title, qty, amount FROM adjustment_transactions INNER JOIN products ON products.id = adjustment_transactions.product_id ORDER BY adjustment_transactions.id DESC LIMIT $1 OFFSET $2', [limit, offset])).rows;
+        const result = (await client.query('SELECT adjustment_transactions.id, adjustment_transactions.product_id, products.title, qty, amount, adjustment_transactions.created_at, products.sku FROM adjustment_transactions INNER JOIN products ON products.id = adjustment_transactions.product_id ORDER BY adjustment_transactions.id DESC LIMIT $1 OFFSET $2', [limit, offset])).rows;
         const countResult = await client.query('SELECT COUNT(id) AS count FROM adjustment_transactions');
 
         return {result, countResult}

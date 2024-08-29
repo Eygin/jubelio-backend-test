@@ -27,7 +27,7 @@ export const listTransaction = async (request: Hapi.Request, h: Hapi.ResponseToo
         const totalPages = Math.ceil(totalCount / pageSize);
 
         return {
-            product: {
+            adjustmentTransaction: {
                 page: pageNumber,
                 limit: pageSize,
                 totalPages: totalPages,

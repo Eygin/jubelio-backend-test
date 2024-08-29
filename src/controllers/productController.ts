@@ -1,6 +1,6 @@
 import Hapi from '@hapi/hapi';
 import Joi from '@hapi/joi';
-import { getList, create, checkSKU, detail, update, deleteById } from '../models/ProductModels';
+import { getList, create, checkSKU, detail, update, deleteById, getSKU } from '../models/ProductModels';
 
 export const getListProduct = async (request: Hapi.Request, h: Hapi.ResponseToolkit) =>
 {
@@ -34,6 +34,24 @@ export const getListProduct = async (request: Hapi.Request, h: Hapi.ResponseTool
                 totalCount: totalCount,
                 results: productResult?.result
             }
+        };
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        return h.response({
+            statusCode: 500,
+            error: 'Internal Server Error',
+            message: 'Unable to fetch products',
+        }).code(500);
+    }
+}
+
+export const getListSKU = async (request: Hapi.Request, h: Hapi.ResponseToolkit) =>
+{
+    try {
+        const productResult = await getSKU()
+
+        return {
+            sku: productResult
         };
     } catch (error) {
         console.error('Error fetching products:', error);

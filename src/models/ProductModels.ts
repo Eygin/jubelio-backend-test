@@ -28,6 +28,20 @@ export const getList = async (params: object) =>
     }
 }
 
+export const getSKU = async () => {
+    const client = await db.connect();
+    try {
+        const result = (await client.query('SELECT title, sku, image, price, stock, id, description FROM products ORDER BY id DESC')).rows;
+
+        return result;
+    } catch (err) {
+        console.error('Error inserting user:', err);
+        throw err;
+    } finally {
+        client.release();
+    }
+}
+
 export const create = async (product: Product) => {
     const client = await db.connect();
     try {
